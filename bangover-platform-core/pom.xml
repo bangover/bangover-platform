@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>cloud.bangover</groupId>
+		<artifactId>bangover-platform</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>bangover-platform-core</artifactId>
+
+	<name>bangover-platform-core</name>
+	<url>https://github.com/bincloud-io/bce</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<lombok.version>1.18.18</lombok.version>
+		<lombok.plugin.version>1.18.18.0</lombok.plugin.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- commons -->
+		<dependency>
+			<groupId>cloud.bangover</groupId>
+			<artifactId>bangover-commons</artifactId>
+		</dependency>
+
+		<!-- async -->
+		<dependency>
+			<groupId>cloud.bangover.async</groupId>
+			<artifactId>bangover-async</artifactId>
+		</dependency>
+
+		<!-- validation -->
+		<dependency>
+			<groupId>cloud.bangover.validation</groupId>
+			<artifactId>bangover-validation</artifactId>
+		</dependency>
+
+		<!-- text processing -->
+		<dependency>
+			<groupId>cloud.bangover.text</groupId>
+			<artifactId>bangover-text-processing</artifactId>
+		</dependency>
+
+		<!-- logging -->
+		<dependency>
+			<groupId>cloud.bangover.logging</groupId>
+			<artifactId>bangover-logging</artifactId>
+		</dependency>
+
+		<!-- interactions -->
+		<dependency>
+			<groupId>cloud.bangover.interactions</groupId>
+			<artifactId>bangover-interactions</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
