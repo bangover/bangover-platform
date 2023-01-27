@@ -13,6 +13,9 @@
 		<module>bangover-platform-core</module>
 		<module>bangover-platform-core-tests</module>
 		<module>bangover-platform-core-testkit</module>
+		<module>bangover-platform-core-impl</module>
+		<module>bangover-platform-core-impl-tests</module>
+		<module>bangover-platform-jee-impl</module>
 	</modules>
 
 	<repositories>
@@ -33,6 +36,7 @@
 		<lombok.version>1.18.18</lombok.version>
 		<lombok.plugin.version>1.18.18.0</lombok.plugin.version>
 		<junit4.version>4.13.1</junit4.version>
+		<jee.version>7.0</jee.version>
 	</properties>
 
 	<distributionManagement>
@@ -49,6 +53,13 @@
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>${lombok.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>${jee.version}</version>
 				<scope>provided</scope>
 			</dependency>
 

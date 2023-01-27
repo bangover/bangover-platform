@@ -9,9 +9,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>bangover-platform-core-testkit</artifactId>
+	<artifactId>bangover-platform-core-impl</artifactId>
 
-	<name>bangover-platform-core-testkit</name>
+	<name>bangover-platform-core-impl</name>
 	<!-- FIXME change it to the project's website -->
 	<url>http://www.example.com</url>
 
@@ -21,6 +21,9 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<lombok.version>1.18.18</lombok.version>
 		<lombok.plugin.version>1.18.18.0</lombok.plugin.version>
+		<junit4.version>4.13.1</junit4.version>
+		<platform.version>0.0.1-SNAPSHOT</platform.version>
+		<liquibase.core.version>4.3.2</liquibase.core.version>
 	</properties>
 
 	<dependencies>
@@ -30,71 +33,71 @@
 			<scope>provided</scope>
 		</dependency>
 		
+		<!-- platform core -->
 		<dependency>
 			<groupId>cloud.bangover</groupId>
 			<artifactId>bangover-platform-core</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- commons -->
-		<dependency>
-			<groupId>cloud.bangover</groupId>
-			<artifactId>bangover-commons</artifactId>
-			<scope>provided</scope>
+			<version>${platform.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>cloud.bangover</groupId>
-			<artifactId>bangover-commons-testkit</artifactId>
+			<artifactId>bangover-platform-core-testkit</artifactId>
+			<version>${platform.version}</version>
+			<scope>test</scope>
 		</dependency>
 
-		<!-- async -->
+		<!-- platform extension -->
 		<dependency>
-			<groupId>cloud.bangover.async</groupId>
-			<artifactId>bangover-async</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover.async</groupId>
-			<artifactId>bangover-async-testkit</artifactId>
-		</dependency>
-
-		<!-- validation -->
-		<dependency>
-			<groupId>cloud.bangover.validation</groupId>
-			<artifactId>bangover-validation</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover.validation</groupId>
-			<artifactId>bangover-validation-testkit</artifactId>
-		</dependency>
-
-		<!-- text processing -->
-		<dependency>
-			<groupId>cloud.bangover.text</groupId>
-			<artifactId>bangover-text-processing</artifactId>
-			<scope>provided</scope>
+			<groupId>cloud.bangover.actors</groupId>
+			<artifactId>bangover-actors</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>cloud.bangover</groupId>
+					<artifactId>bangover-commons</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>cloud.bangover.async</groupId>
+					<artifactId>bangover-async</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>cloud.bangover.text</groupId>
-			<artifactId>bangover-text-processing-testkit</artifactId>
+			<artifactId>bangover-handlebars-templates-support</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>cloud.bangover.text</groupId>
+					<artifactId>bangover-text-processing</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
-		<!-- interactions -->
 		<dependency>
-			<groupId>cloud.bangover.interactions</groupId>
-			<artifactId>bangover-interactions</artifactId>
-			<scope>provided</scope>
+			<groupId>cloud.bangover.validation</groupId>
+			<artifactId>bangover-bean-validation-support</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>cloud.bangover.validation</groupId>
+					<artifactId>bangover-validation</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>cloud.bangover.interactions</groupId>
-			<artifactId>bangover-interactions-testkit</artifactId>
+			<artifactId>bangover-actor-system-interactions-support</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>cloud.bangover.interactions</groupId>
+					<artifactId>bangover-interactions</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>cloud.bangover.actors</groupId>
+					<artifactId>bangover-actors</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 

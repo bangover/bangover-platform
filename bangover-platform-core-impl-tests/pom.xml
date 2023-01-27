@@ -9,9 +9,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>bangover-platform-core-testkit</artifactId>
+	<artifactId>bangover-platform-core-impl-tests</artifactId>
 
-	<name>bangover-platform-core-testkit</name>
+	<name>bangover-platform-core-impl-tests</name>
 	<!-- FIXME change it to the project's website -->
 	<url>http://www.example.com</url>
 
@@ -29,72 +29,41 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>cloud.bangover</groupId>
 			<artifactId>bangover-platform-core</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- commons -->
-		<dependency>
-			<groupId>cloud.bangover</groupId>
-			<artifactId>bangover-commons</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>cloud.bangover</groupId>
-			<artifactId>bangover-commons-testkit</artifactId>
+			<artifactId>bangover-platform-core-testkit</artifactId>
+			<version>${project.version}</version>
 		</dependency>
-
-		<!-- async -->
+		
 		<dependency>
-			<groupId>cloud.bangover.async</groupId>
-			<artifactId>bangover-async</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover.async</groupId>
-			<artifactId>bangover-async-testkit</artifactId>
-		</dependency>
-
-		<!-- validation -->
-		<dependency>
-			<groupId>cloud.bangover.validation</groupId>
-			<artifactId>bangover-validation</artifactId>
-			<scope>provided</scope>
+			<groupId>cloud.bangover.actors</groupId>
+			<artifactId>bangover-actors-testkit</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>cloud.bangover</groupId>
+					<artifactId>bangover-commons-testkit</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
-			<groupId>cloud.bangover.validation</groupId>
-			<artifactId>bangover-validation-testkit</artifactId>
-		</dependency>
-
-		<!-- text processing -->
-		<dependency>
-			<groupId>cloud.bangover.text</groupId>
-			<artifactId>bangover-text-processing</artifactId>
-			<scope>provided</scope>
+			<groupId>cloud.bangover</groupId>
+			<artifactId>bangover-platform-core-impl</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>cloud.bangover.text</groupId>
-			<artifactId>bangover-text-processing-testkit</artifactId>
-		</dependency>
-
-		<!-- interactions -->
-		<dependency>
-			<groupId>cloud.bangover.interactions</groupId>
-			<artifactId>bangover-interactions</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover.interactions</groupId>
-			<artifactId>bangover-interactions-testkit</artifactId>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -112,32 +81,20 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
+				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

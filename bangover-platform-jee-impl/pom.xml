@@ -9,9 +9,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>bangover-platform-core-testkit</artifactId>
+	<artifactId>bangover-platform-jee-impl</artifactId>
 
-	<name>bangover-platform-core-testkit</name>
+	<name>bangover-platform-jee-impl</name>
 	<!-- FIXME change it to the project's website -->
 	<url>http://www.example.com</url>
 
@@ -29,72 +29,24 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>cloud.bangover</groupId>
 			<artifactId>bangover-platform-core</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- commons -->
+		
 		<dependency>
 			<groupId>cloud.bangover</groupId>
-			<artifactId>bangover-commons</artifactId>
+			<artifactId>bangover-platform-core-impl</artifactId>
+			<version>${project.version}</version>
 			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover</groupId>
-			<artifactId>bangover-commons-testkit</artifactId>
-		</dependency>
-
-		<!-- async -->
-		<dependency>
-			<groupId>cloud.bangover.async</groupId>
-			<artifactId>bangover-async</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover.async</groupId>
-			<artifactId>bangover-async-testkit</artifactId>
-		</dependency>
-
-		<!-- validation -->
-		<dependency>
-			<groupId>cloud.bangover.validation</groupId>
-			<artifactId>bangover-validation</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover.validation</groupId>
-			<artifactId>bangover-validation-testkit</artifactId>
-		</dependency>
-
-		<!-- text processing -->
-		<dependency>
-			<groupId>cloud.bangover.text</groupId>
-			<artifactId>bangover-text-processing</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover.text</groupId>
-			<artifactId>bangover-text-processing-testkit</artifactId>
-		</dependency>
-
-		<!-- interactions -->
-		<dependency>
-			<groupId>cloud.bangover.interactions</groupId>
-			<artifactId>bangover-interactions</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover.interactions</groupId>
-			<artifactId>bangover-interactions-testkit</artifactId>
 		</dependency>
 	</dependencies>
 
