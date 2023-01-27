@@ -24,19 +24,23 @@ public class ErrorDescriptionGeneratorTest {
     transformer.configure().withDefault(TextTemplates.createBy(PROCESSED_MESSAGE));
     // When
     TextProcessor textProcessor = TextProcessor.create().withTransformer(transformer);
-    ApplicationException error = new ApplicationException( BoundedContextId.createFor("CTX"), ErrorSeverity.BUSINESS, ErrorCode.createFor(1L), DEFAULT_MESSAGE);
+    ApplicationException error = new ApplicationException(BoundedContextId.createFor("CTX"),
+        ErrorSeverity.BUSINESS, ErrorCode.createFor(1L), DEFAULT_MESSAGE);
 
     // Then
-    Assert.assertEquals(PROCESSED_MESSAGE, ErrorDescriptionGenerator.of(textProcessor, error).generateDescription());
+    Assert.assertEquals(PROCESSED_MESSAGE,
+        ErrorDescriptionGenerator.of(textProcessor, error).generateDescription());
   }
 
   @Test
   public void shouldGenerateDefaultDescription() {
     // When
     TextProcessor textProcessor = TextProcessor.create();
-    ApplicationException error = new ApplicationException( BoundedContextId.createFor("CTX"), ErrorSeverity.BUSINESS, ErrorCode.createFor(1L), DEFAULT_MESSAGE);
+    ApplicationException error = new ApplicationException(BoundedContextId.createFor("CTX"),
+        ErrorSeverity.BUSINESS, ErrorCode.createFor(1L), DEFAULT_MESSAGE);
 
     // Then
-    Assert.assertEquals(error.getMessage(), ErrorDescriptionGenerator.of(textProcessor, error).generateDescription());
+    Assert.assertEquals(error.getMessage(),
+        ErrorDescriptionGenerator.of(textProcessor, error).generateDescription());
   }
 }

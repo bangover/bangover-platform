@@ -14,8 +14,9 @@ import org.junit.runners.JUnit4;
 public class PubSubEventBusTest {
   private static final BoundedContextId CONTEXT = BoundedContextId.createFor("CONTEXT");
   private static final EventType<Long> EVENT_TYPE = EventType.createFor("EVENT", Long.class);
-  private static final EventType<String> WRONG_INITIALIZED_EVENT_TYPE = EventType.createFor("EVENT", String.class);
-  
+  private static final EventType<String> WRONG_INITIALIZED_EVENT_TYPE =
+      EventType.createFor("EVENT", String.class);
+
   @Test
   public void shouldPublishEventsToEventBus() {
     // Given
@@ -30,26 +31,28 @@ public class PubSubEventBusTest {
     // Then
     Assert.assertTrue(eventListener.getHistory().hasEntry(0, 1L));
   }
-  
+
   @Test(expected = UnacceptableEventException.class)
   public void shouldFailOnWrongEventTypePublishing() {
-    // Given    
+    // Given
     PubSub<Object> channel = new LocalPubSub<Object>();
     EventBus eventBus = PubSubEventBus.factory(channel).createEventBus();
 
     // When
     @SuppressWarnings("unchecked")
-    EventPublisher<Object> eventPublisher = (EventPublisher<Object>) ((Object) eventBus.getPublisher(CONTEXT, EVENT_TYPE));
+    EventPublisher<Object> eventPublisher =
+        (EventPublisher<Object>) ((Object) eventBus.getPublisher(CONTEXT, EVENT_TYPE));
     eventPublisher.publish("HELLO");
   }
-  
+
   @Test
   public void shouldNotReactOnUnregisteredType() {
     // Given
     PubSub<Object> channel = new LocalPubSub<Object>();
     EventBus eventBus = PubSubEventBus.factory(channel).createEventBus();
     MockEventListener<String> eventListener = new MockEventListener<String>();
-    EventSubscribtion eventSubscribtion = eventBus.subscribeOn(CONTEXT, WRONG_INITIALIZED_EVENT_TYPE, eventListener);
+    EventSubscribtion eventSubscribtion =
+        eventBus.subscribeOn(CONTEXT, WRONG_INITIALIZED_EVENT_TYPE, eventListener);
     // When
     eventBus.getPublisher(CONTEXT, EVENT_TYPE).publish(1L);
     eventSubscribtion.unsubscribe();

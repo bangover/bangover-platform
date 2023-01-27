@@ -30,6 +30,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>cloud.bangover</groupId>
+			<artifactId>bangover-platform-core</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- commons -->
 		<dependency>
 			<groupId>cloud.bangover</groupId>
@@ -93,11 +100,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok-maven-plugin</artifactId>
-			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
