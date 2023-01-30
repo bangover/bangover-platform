@@ -37,5 +37,4 @@ public class JpaDataStore<V> implements DataStore<JpaContext<V>, V> {
     specification.applyTo(context);
     return context.getQuery();
   }
-
 }
