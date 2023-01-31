@@ -11,6 +11,10 @@ package cloud.bangover.functions;
  */
 public interface BusinessFunction<Q, S> {
   void invoke(Context<Q, S> context);
+  
+  default <T> BusinessFunction<Q, T> cascade(BusinessFunction<S, T> cascaded) {
+    return new FunctionsCascade<Q, S, T>(this, cascaded);
+  }
 
   /**
    * The business function object.
