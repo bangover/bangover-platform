@@ -5,25 +5,23 @@ import cloud.bangover.functions.BusinessFunction;
 import cloud.bangover.functions.BusinessFunctionDecorator;
 import javax.transaction.NotSupportedException;
 import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 public class JeeUnitOfWorkFunction<Q, S> extends UnitOfWorkFunction<Q, S> {
-  private final TransactionManager transactionManager;
+  private final UserTransaction userTransaction;
 
-  private JeeUnitOfWorkFunction(BusinessFunction<Q, S> original,
-      TransactionManager transactionManager) {
+  private JeeUnitOfWorkFunction(BusinessFunction<Q, S> original, UserTransaction userTransaction) {
     super(original);
-    this.transactionManager = transactionManager;
+    this.userTransaction = userTransaction;
   }
 
-  public static BusinessFunctionDecorator decorator(TransactionManager transactionManager) {
+  public static BusinessFunctionDecorator decorator(UserTransaction userTransaction) {
     return new BusinessFunctionDecorator() {
       @Override
       public <Q, S> BusinessFunction<Q, S> decorate(BusinessFunction<Q, S> original) {
-        return new JeeUnitOfWorkFunction<>(original, transactionManager);
+        return new JeeUnitOfWorkFunction<>(original, userTransaction);
       }
     };
   }
@@ -31,8 +29,8 @@ public class JeeUnitOfWorkFunction<Q, S> extends UnitOfWorkFunction<Q, S> {
   @Override
   protected UnitOfWorkContext startWork() {
     try {
-      transactionManager.begin();
-      return new JeeUnitOfWorkContext(transactionManager.getTransaction());
+      userTransaction.begin();
+      return new JeeUnitOfWorkContext(userTransaction);
     } catch (NotSupportedException | SystemException error) {
       throw new UnexpectedErrorException(error);
     }
@@ -40,7 +38,7 @@ public class JeeUnitOfWorkFunction<Q, S> extends UnitOfWorkFunction<Q, S> {
 
   @RequiredArgsConstructor
   private static class JeeUnitOfWorkContext implements UnitOfWorkContext {
-    private final Transaction transaction;
+    private final UserTransaction transaction;
 
     @Override
     @SneakyThrows
