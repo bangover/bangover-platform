@@ -11,9 +11,17 @@ package cloud.bangover.functions;
  */
 public interface BusinessFunction<Q, S> {
   void invoke(Context<Q, S> context);
-  
+
+  /**
+   * Make the {@link BusinessFunction} components cascade. Each cascaded function will be take
+   * response of previous function as an argument.
+   * 
+   * @param <T>      The cascaded {@link BusinessFunction} response type name
+   * @param cascaded The cascaded {@link BusinessFunction}
+   * @return The derived {@link BusinessFunction}, calling the functions cascade.
+   */
   default <T> BusinessFunction<Q, T> cascade(BusinessFunction<S, T> cascaded) {
-    return new FunctionsCascade<Q, S, T>(this, cascaded);
+    return new BusinessFunctionsCascade<Q, S, T>(this, cascaded);
   }
 
   /**

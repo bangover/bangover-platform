@@ -12,19 +12,23 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class UnitofWorkFunctionTest {
+  private static final Object OBJECT = new Object();
   private static final RuntimeException EXCEPTION = new RuntimeException();
 
   @Test
-  public void shouldBeAbortedAfterReplying() throws Exception {
+  public void shouldBeAbortedAfterReplying() throws Throwable {
     // Given
-    BusinessFunction<Object, Object> originalFunction =
-        new StubBusinessFunction<>(Promises.resolvedBy(new Object()), Timeout.ofSeconds(3L));
+    BusinessFunction<Object, Object> originalFunction = context -> {
+      context.reply(context.getRequest());
+    };
+    
     MockUnitOfWorkFunction<Object, Object> uowFunction =
         new MockUnitOfWorkFunction<>(originalFunction);
     // When
-    MockFunctionRunner.createFor(uowFunction).executeFunction(new Object()).await();
+    Object result = MockFunctionRunner.createFor(uowFunction).executeFunction(OBJECT).get(10L);
     // Then
     Assert.assertTrue(uowFunction.isCompleted());
+    Assert.assertSame(OBJECT, result);
   }
 
   @Test

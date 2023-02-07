@@ -5,6 +5,19 @@ package cloud.bangover.functions;
  * allows to implement high-order decorator function pattern for business functions.
  */
 public interface BusinessFunctionDecorator {
+
+  /**
+   * Make cascade of the {@link BusinessFunctionDecorator} components. The cascaded decorator will
+   * be applied before decorator on which method
+   * {@link BusinessFunctionDecorator#cascade(BusinessFunctionDecorator)} is called.
+   * 
+   * @param cascaded The cascaded {@link BusinessFunctionDecorator}
+   * @return The derived {@link BusinessFunctionDecorator} applying decorators cascade.
+   */
+  default BusinessFunctionDecorator cascade(BusinessFunctionDecorator cascaded) {
+    return new BusinessFunctionDecoratorsCascade(this, cascaded);
+  }
+
   /**
    * Decorate business function.
    *

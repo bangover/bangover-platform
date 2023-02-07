@@ -5,7 +5,7 @@ import cloud.bangover.async.promises.Promises;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-class FunctionsCascade<Q, S, R> implements BusinessFunction<Q, R> {
+class BusinessFunctionsCascade<Q, S, R> implements BusinessFunction<Q, R> {
   private final BusinessFunction<Q, S> original;
   private final BusinessFunction<S, R> chained;
 
