@@ -44,7 +44,7 @@ public class CreateEntityFunctionTest {
     // Given
     generator.configure().withNextEntry(1L);
     BusinessFunction<Void, Long> function =
-        new CreateEntityFunction<>(store, () -> new MockEntity(generator));
+        new CreateEntityFunction<Long, MockEntity, Void>(store, () -> new MockEntity(generator));
     ReplyOnlyInteractor<Long> interactor = registry.registerReplyOnlyFunction(Long.class, function);
     // When
     Promise<Long> result = interactor.invoke();
@@ -63,7 +63,8 @@ public class CreateEntityFunctionTest {
     // Given
     generator.configure().withNextEntry(1L);
     BusinessFunction<String, Long> function =
-        new CreateEntityFunction<>(store, request -> new MockEntity(generator, request));
+        new CreateEntityFunction<Long, MockEntity, String>(store, request -> new MockEntity(
+            generator, request));
     RequestReplyInteractor<String, Long> interactor =
         registry.registerRequestReplyFunction(String.class, Long.class, function);
     // When
@@ -81,9 +82,10 @@ public class CreateEntityFunctionTest {
   public void shouldCreateEntityWithFault() {
     // Given
     generator.configure().withNextEntry(1L);
-    BusinessFunction<String, Long> function = new CreateEntityFunction<>(store, request -> {
-      throw new RuntimeException("ERROR");
-    });
+    BusinessFunction<String, Long> function =
+        new CreateEntityFunction<Long, MockEntity, String>(store, request -> {
+          throw new RuntimeException("ERROR");
+        });
     RequestReplyInteractor<String, Long> interactor =
         registry.registerRequestReplyFunction(String.class, Long.class, function);
     // When

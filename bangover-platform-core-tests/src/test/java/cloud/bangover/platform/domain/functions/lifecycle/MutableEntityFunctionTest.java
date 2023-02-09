@@ -41,8 +41,10 @@ public class MutableEntityFunctionTest {
   @Test
   public void shouldMutableOperationBeExecuted() throws Throwable {
     // Given
+
     BusinessFunction<EditDescriptionCommand, String> function =
-        new MutableEntityFunction<>(store, ((entity, command) -> {
+        new MutableEntityFunction<Long, MockEntity, EditDescriptionCommand, String>(store, ((
+            entity, command) -> {
           entity.edit(command.getDescription());
           return entity.getDescription();
         }));
@@ -61,7 +63,8 @@ public class MutableEntityFunctionTest {
   public void shouldMutableRequestOnlyOperationBeExecuted() throws Throwable {
     // Given
     BusinessFunction<EditDescriptionCommand, Void> function =
-        new MutableEntityFunction<>(store, ((entity, command) -> {
+        new MutableEntityFunction<Long, MockEntity, EditDescriptionCommand, Void>(store, ((entity,
+            command) -> {
           entity.edit(command.getDescription());
         }));
     RequestReplyInteractor<EditDescriptionCommand, Void> interactor =
@@ -77,9 +80,11 @@ public class MutableEntityFunctionTest {
   @Test
   public void shouldMutableOperationBeFailed() {
     // Given
-    BusinessFunction<EditDescriptionCommand, Void> function = new ImmutableEntityFunction<>(store,
-        (EntityLifecycleFunction.RequestOnlyLifecycleOperation<Long, MockEntity,
-            EditDescriptionCommand>) ((entity, command) -> entity.edit(command.getDescription())));
+    BusinessFunction<EditDescriptionCommand, Void> function =
+        new ImmutableEntityFunction<>(
+            store,
+            (EntityLifecycleFunction.RequestOnlyLifecycleOperation<Long, MockEntity, EditDescriptionCommand>) ((
+                entity, command) -> entity.edit(command.getDescription())));
     RequestReplyInteractor<EditDescriptionCommand, Void> interactor =
         registry.registerRequestReplyFunction(EditDescriptionCommand.class, Void.class, function);
     // When
@@ -90,8 +95,8 @@ public class MutableEntityFunctionTest {
 
   @Getter
   @RequiredArgsConstructor
-  public static class EditDescriptionCommand
-      implements EntityLifecycleFunction.EntityLifecycleCommand<Long> {
+  public static class EditDescriptionCommand implements
+      EntityLifecycleFunction.EntityLifecycleCommand<Long> {
     private final Long id;
     private final String description;
   }
