@@ -28,7 +28,7 @@ public abstract class JpaContext<V> {
 
   protected abstract TypedQuery<V> createQuery(Class<V> entityType, EntityManager entityManager);
 
-  public interface JpaContextFactory<V> {
-    JpaContext<V> createContext(Class<V> entityType, EntityManager entityManager);
+  public interface JpaContextFactory<C extends JpaContext<V>, V> {
+    C createContext(Class<V> entityType, EntityManager entityManager);
   }
 }

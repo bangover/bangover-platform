@@ -176,12 +176,6 @@
 	</dependencyManagement>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>${project.build.directory}/shaded-sources</directory>
-			</resource>
-		</resources>
-
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -192,20 +186,6 @@
 
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.projectlombok</groupId>
-					<artifactId>lombok-maven-plugin</artifactId>
-					<version>${lombok.plugin.version}</version>
-					<executions>
-						<execution>
-							<phase>generate-sources</phase>
-							<goals>
-								<goal>delombok</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
@@ -306,7 +286,7 @@
 							<goals>
 								<goal>unpack-dependencies</goal>
 							</goals>
-							<phase>prepare-package</phase>
+							<phase>generate-sources</phase>
 							<configuration>
 								<classifier>sources</classifier>
 								<outputDirectory>${project.build.directory}/shaded-sources</outputDirectory>
@@ -338,30 +318,7 @@
 						</execution>
 					</executions>
 				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.4.2</version>
-
-					<executions>
-						<execution>
-							<id>jar-assembly</id>
-							<phase>package</phase>
-							<goals>
-								<goal>single</goal>
-							</goals>
-
-							<configuration>
-								<appendAssemblyId>false</appendAssemblyId>
-								<descriptors>
-									<descriptor>uber.xml</descriptor>
-								</descriptors>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-
+				
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>

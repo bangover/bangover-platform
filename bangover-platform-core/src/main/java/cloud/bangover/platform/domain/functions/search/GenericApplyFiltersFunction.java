@@ -7,7 +7,8 @@ public class GenericApplyFiltersFunction<F> extends
 
   @SuppressWarnings("unchecked")
   public GenericApplyFiltersFunction(Generator<Long> tokenGenerator,
-      FiltersEntityStore<F, GenericFiltersEntity<F>> filtersStore) {
-    super(tokenGenerator, filtersStore, GenericFiltersEntity::new);
+      FiltersEntityStore<F, FiltersEntity<F>> filtersStore) {
+    super(tokenGenerator, (FiltersEntityStore<F, GenericFiltersEntity<F>>) (Object) filtersStore,
+        GenericFiltersEntity::new);
   }
 }

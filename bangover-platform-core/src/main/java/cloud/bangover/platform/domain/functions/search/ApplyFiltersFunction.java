@@ -11,17 +11,15 @@ import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ApplyFiltersFunction<F, E extends ApplyFiltersFunction.FiltersEntity<F>> implements
-    BusinessFunction<F, Long> {
+public class ApplyFiltersFunction<F, E extends ApplyFiltersFunction.FiltersEntity<F>>
+    implements BusinessFunction<ApplyFiltersFunction.FiltersData<F>, Long> {
   private final Generator<Long> tokenGenerator;
   private final FiltersEntityStore<F, E> filtersStore;
   private final FiltersEntityCreator<F, E> filtersEntityCreator;
 
-  
-  
   @Override
-  public void invoke(Context<F, Long> context) {
-    F filters = context.getRequest();
+  public void invoke(Context<ApplyFiltersFunction.FiltersData<F>, Long> context) {
+    F filters = context.getRequest().createFilters();
     E entity = obtainRegisteredFiltersEntity(filters);
     context.reply(entity.getId());
   }
@@ -32,6 +30,10 @@ public class ApplyFiltersFunction<F, E extends ApplyFiltersFunction.FiltersEntit
       filtersStore.save(entity);
       return entity;
     });
+  }
+
+  public interface FiltersData<F> {
+    F createFilters();
   }
 
   public interface FiltersEntity<F> extends Entity<Long> {

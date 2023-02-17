@@ -11,29 +11,29 @@ import javax.persistence.TypedQuery;
 import java.util.Collection;
 
 @RequiredArgsConstructor
-public class JpaDataStore<V> implements DataStore<JpaContext<V>, V> {
+public class JpaDataStore<C extends JpaContext<V>, V> implements DataStore<C, V> {
   @NonNull
   private final Class<V> entityType;
   @NonNull
   private final EntityManager entityManager;
   @NonNull
-  private final JpaContext.JpaContextFactory<V> contextCreator;
+  private final JpaContext.JpaContextFactory<C, V> contextCreator;
 
   @Override
-  public Collection<V> find(Specification<JpaContext<V>> specification) {
+  public Collection<V> find(Specification<C> specification) {
     return createQuery(specification).getResultList();
   }
 
   @Override
-  public Collection<V> find(Specification<JpaContext<V>> specification, Pagination pagination) {
+  public Collection<V> find(Specification<C> specification, Pagination pagination) {
     TypedQuery<V> query = createQuery(specification);
     query.setFirstResult(pagination.getOffset().intValue());
     query.setMaxResults(pagination.getSize());
     return query.getResultList();
   }
 
-  private TypedQuery<V> createQuery(Specification<JpaContext<V>> specification) {
-    JpaContext<V> context = contextCreator.createContext(entityType, entityManager);
+  private TypedQuery<V> createQuery(Specification<C> specification) {
+    C context = contextCreator.createContext(entityType, entityManager);
     specification.applyTo(context);
     return context.getQuery();
   }

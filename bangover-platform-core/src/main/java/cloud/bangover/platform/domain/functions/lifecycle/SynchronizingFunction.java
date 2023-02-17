@@ -21,7 +21,7 @@ public class SynchronizingFunction<D, I, E extends Entity<I>> implements Busines
     C convert(D data);
   }
 
-  interface SynchronizingCommand<I, E extends Entity<I>> {
+  public interface SynchronizingCommand<I, E extends Entity<I>> {
     void synchronize(EntityStore<I, E> store);
   }
 
