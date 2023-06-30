@@ -1,0 +1,19 @@
+package cloud.bangover.async;
+
+import java.io.Serializable;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.Extension;
+
+public class AsyncFlowScopeExtension implements Extension, Serializable {
+  private static final long serialVersionUID = 3750578682065199038L;
+
+  public void addScope(@Observes final BeforeBeanDiscovery event) {
+    event.addScope(AsyncFlowScope.class, true, false);
+  }
+
+  public void registerContext(@Observes final AfterBeanDiscovery event) {
+    event.addContext(new AsyncFlowContext());
+  }
+}

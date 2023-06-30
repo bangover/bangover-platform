@@ -13,9 +13,42 @@
 		<module>bangover-platform-core</module>
 		<module>bangover-platform-core-tests</module>
 		<module>bangover-platform-core-testkit</module>
+		<module>bangover-platform-core-impl</module>
+		<module>bangover-platform-core-impl-tests</module>
+		<module>bangover-platform-jee-impl</module>
+		<module>bangover-platform-jpa-support</module>
+		<module>bangover-platform-jpa-support-testkit</module>
+		<module>bangover-platform-jta-support</module>
+		<module>bangover-platform-aspectj-logging-support</module>
 	</modules>
 
 	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Maven central proxy repository</name>
+			<url>http://nexus.bangover.cloud/repository/maven-central/</url>
+		</repository>
+
+		<repository>
+			<id>bagover-releases</id>
+			<name>Bangover release repository</name>
+			<url>http://nexus.bangover.cloud/repository/maven-bangover-releases/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+
+		<repository>
+			<id>bangover-snapshots</id>
+			<name>Bangover snapshots repository</name>
+			<url>
+				http://nexus.bangover.cloud/repository/maven-bangover-snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+
+		<!-- This repository is deprecated and will be removed after migration -->
 		<repository>
 			<id>bangover</id>
 			<name>Bangover repository</name>
@@ -33,14 +66,23 @@
 		<lombok.version>1.18.18</lombok.version>
 		<lombok.plugin.version>1.18.18.0</lombok.plugin.version>
 		<junit4.version>4.13.1</junit4.version>
+		<jee.version>7.0</jee.version>
+		<aspectj.version>1.8.7</aspectj.version>
 	</properties>
 
 	<distributionManagement>
 		<repository>
-			<id>bangover</id>
-			<name>Bangover repository</name>
-			<url>https://maven.pkg.github.com/bangover/bangover-platform</url>
+			<id>nexus.bagover.cloud</id>
+			<name>Bangover release repository</name>
+			<url>http://nexus.bangover.cloud/repository/maven-bangover-releases/</url>
 		</repository>
+
+		<snapshotRepository>
+			<id>nexus.bagover.cloud</id>
+			<name>Bangover snapshots repository</name>
+			<url>
+				http://nexus.bangover.cloud/repository/maven-bangover-snapshots/</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<dependencyManagement>
@@ -49,6 +91,35 @@
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>${lombok.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Java EE -->
+			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>${jee.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- AspectJ -->
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjtools</artifactId>
+				<version>${aspectj.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjrt</artifactId>
+				<version>${aspectj.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjweaver</artifactId>
+				<version>${aspectj.version}</version>
 				<scope>provided</scope>
 			</dependency>
 
@@ -62,6 +133,20 @@
 			<dependency>
 				<groupId>cloud.bangover</groupId>
 				<artifactId>bangover-commons-testkit</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<!-- jaxb support -->
+			<dependency>
+				<groupId>cloud.bangover.xml</groupId>
+				<artifactId>bangover-jaxb-support</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<!-- datasets support -->
+			<dependency>
+				<groupId>cloud.bangover.dataset</groupId>
+				<artifactId>bangover-xml-dataset</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
@@ -165,12 +250,6 @@
 	</dependencyManagement>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>${project.build.directory}/shaded-sources</directory>
-			</resource>
-		</resources>
-
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -181,20 +260,6 @@
 
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.projectlombok</groupId>
-					<artifactId>lombok-maven-plugin</artifactId>
-					<version>${lombok.plugin.version}</version>
-					<executions>
-						<execution>
-							<phase>generate-sources</phase>
-							<goals>
-								<goal>delombok</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
@@ -282,73 +347,6 @@
 							<version>1.7.30</version>
 						</dependency>
 					</dependencies>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>3.5.0</version>
-
-					<executions>
-						<execution>
-							<id>unpack-sources</id>
-							<goals>
-								<goal>unpack-dependencies</goal>
-							</goals>
-							<phase>prepare-package</phase>
-							<configuration>
-								<classifier>sources</classifier>
-								<outputDirectory>${project.build.directory}/shaded-sources</outputDirectory>
-								<failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
-								<includeScope>runtime</includeScope>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.4.1</version>
-
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<goals>
-								<goal>shade</goal>
-							</goals>
-
-							<configuration>
-								<createSourcesJar>true</createSourcesJar>
-								<shadeSourcesContent>true</shadeSourcesContent>
-								<createDependencyReducedPom>true</createDependencyReducedPom>
-								<useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.4.2</version>
-
-					<executions>
-						<execution>
-							<id>jar-assembly</id>
-							<phase>package</phase>
-							<goals>
-								<goal>single</goal>
-							</goals>
-
-							<configuration>
-								<appendAssemblyId>false</appendAssemblyId>
-								<descriptors>
-									<descriptor>uber.xml</descriptor>
-								</descriptors>
-							</configuration>
-						</execution>
-					</executions>
 				</plugin>
 
 				<plugin>
