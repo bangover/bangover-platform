@@ -8,7 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class PromisesConfigurer {
+public class PromisesLifecycleConfigurer {
   @Inject
   private ActorSystem actorSystem;
 

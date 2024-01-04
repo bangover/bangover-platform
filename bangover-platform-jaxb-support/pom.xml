@@ -9,9 +9,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>bangover-platform-jpa-support-testkit</artifactId>
+	<artifactId>bangover-platform-jaxb-support</artifactId>
 
-	<name>bangover-platform-jpa-support-testkit</name>
+	<name>bangover-platform-jaxb-support</name>
 	<!-- FIXME change it to the project's website -->
 	<url>http://www.example.com</url>
 
@@ -40,27 +40,6 @@
 			<artifactId>bangover-platform-core</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover</groupId>
-			<artifactId>bangover-platform-core-testkit</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cloud.bangover</groupId>
-			<artifactId>bangover-platform-core-impl</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>provided</scope>
-			<optional>true</optional>
 		</dependency>
 	</dependencies>
 

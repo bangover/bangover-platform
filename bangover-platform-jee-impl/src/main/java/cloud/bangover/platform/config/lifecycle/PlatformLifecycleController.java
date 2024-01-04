@@ -14,19 +14,19 @@ public class PlatformLifecycleController {
   private ActorSystem actorSystem;
 
   @Inject
-  private TextProcessingConfigurer textProcessingConfigurer;
+  private TextProcessingLifecycleConfigurer textProcessingConfigurer;
 
   @Inject
-  private GlobalValidationConfigurer globalValidationConfigurer;
+  private GlobalValidationLifecycleConfigurer globalValidationConfigurer;
 
   @Inject
-  private PromisesConfigurer promisesConfigurer;
+  private PromisesLifecycleConfigurer promisesConfigurer;
 
   @Inject
-  private GlobalEventsConfigurer globalEventsConfigurer;
+  private GlobalEventsLifecycleConfigurer globalEventsConfigurer;
 
   @Inject
-  private TimeModuleConfigurer timeModuleConfigurer;
+  private TimeModuleLifecycleConfigurer timeModuleConfigurer;
 
   public void onStart(@Observes @Initialized(ApplicationScoped.class) Object pointless) {
     timeModuleConfigurer.configureTimeModule(Time.configure());

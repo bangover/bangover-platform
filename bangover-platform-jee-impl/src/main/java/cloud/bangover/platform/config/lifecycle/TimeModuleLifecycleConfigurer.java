@@ -7,7 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class TimeModuleConfigurer {
+public class TimeModuleLifecycleConfigurer {
   @Inject
   private TimeProvider timeProvider;
 

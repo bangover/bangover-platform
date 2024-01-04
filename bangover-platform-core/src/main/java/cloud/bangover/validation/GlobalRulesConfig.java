@@ -11,11 +11,11 @@ import java.util.Map;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor(staticName = "create")
-public class GlobalRules {
+public class GlobalRulesConfig {
   @Getter
   private Map<String, Rule<?>> candidates = new HashMap<>();
 
-  public <T> GlobalRules withCandidate(String name, Rule<T> rule) {
+  public <T> GlobalRulesConfig withCandidate(String name, Rule<T> rule) {
     candidates.put(name, rule);
     return this;
   }
