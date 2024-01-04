@@ -1,6 +1,5 @@
 package cloud.bangover.async;
 
-import cloud.bangover.BoundedContextId;
 import cloud.bangover.async.AsyncContext.LifecycleController;
 import cloud.bangover.events.EventPublisher;
 import cloud.bangover.events.EventType;
@@ -38,11 +37,7 @@ public class AsyncFlowLifecyclePlatformController implements LifecycleController
   }
 
   private <E> EventPublisher<E> getPublisher(EventType<E> type) {
-    return GlobalEvents.publisher(getBoundedContext(), type);
-  }
-
-  private BoundedContextId getBoundedContext() {
-    return BoundedContextId.PLATFORM_CONTEXT;
+    return GlobalEvents.publisher(type);
   }
 
   private LifecycleController getController() {

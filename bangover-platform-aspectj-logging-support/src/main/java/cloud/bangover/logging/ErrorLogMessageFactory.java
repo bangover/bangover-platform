@@ -17,7 +17,6 @@ class ErrorLogMessageFactory implements LogMessageFactory {
         + "Method: {{$signature}}\nContext id: {{$contextId}}\nError code: {{$errorCode}}\n"
         + "Error severity: {{$severity}}\n================\nStacktrace:\n{{$errorStacktrace}}\n",
         errorDescriptor.getErrorDetails())
-        .withParameter("$contextId", errorDescriptor.getContextId())
         .withParameter("$errorCode", errorDescriptor.getErrorCode())
         .withParameter("$severity", errorDescriptor.getErrorSeverity())
         .withParameter("$severity", signature.getMethod().toString());

@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import java.util.Map;
 
 @ApplicationScoped
-public class GlobalValidationConfigurer {
+public class GlobalValidationLifecycleConfigurer {
   @Inject
   private Instance<GlobalRulesConfigurer> configurations;
 

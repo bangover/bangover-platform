@@ -1,5 +1,7 @@
 package cloud.bangover.functions;
 
+import cloud.bangover.interactions.interactor.ReplyOnlyInteractor;
+import cloud.bangover.interactions.interactor.RequestReplyInteractor;
 import cloud.bangover.timer.Timeout;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -10,14 +12,14 @@ public class PlatformBusinessFunctionRegistry implements BusinessFunctionRegistr
   private Optional<BusinessFunctionDecorator> decorator = Optional.empty();
 
   @Override
-  public <S> FunctionReplyOnlyInteractor<S> registerReplyOnlyFunction(Class<?> responseType,
+  public <S> ReplyOnlyInteractor<S> registerReplyOnlyFunction(Class<?> responseType,
       BusinessFunction<Void, S> businessFunction, Timeout timeout) {
     return internalRegistry.registerReplyOnlyFunction(responseType,
         decorateFunction(businessFunction), timeout);
   }
 
   @Override
-  public <Q, S> FunctionRequestReplyInteractor<Q, S> registerRequestReplyFunction(
+  public <Q, S> RequestReplyInteractor<Q, S> registerRequestReplyFunction(
       Class<?> requestType, Class<?> responseType, BusinessFunction<Q, S> businessFunction,
       Timeout timeout) {
     return internalRegistry.registerRequestReplyFunction(requestType, responseType,

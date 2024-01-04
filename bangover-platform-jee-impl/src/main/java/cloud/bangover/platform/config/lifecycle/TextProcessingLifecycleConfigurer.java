@@ -7,7 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class TextProcessingConfigurer {
+public class TextProcessingLifecycleConfigurer {
   @Inject
   private TextProcessor textProcessor;
 

@@ -1,6 +1,5 @@
 package cloud.bangover.functions;
 
-import cloud.bangover.BoundedContextId;
 import cloud.bangover.actors.ActorSystem;
 import cloud.bangover.actors.Actors;
 import cloud.bangover.actors.CorrelationKeyGenerator;
@@ -118,7 +117,7 @@ public class ActorBasedBusinessFunctionExecutionTest {
       try {
         actorSystem.start();
         BusinessFunctionRegistry businessFunctionRegistry =
-            new ActorSystemBusinessFunctionRegistry(BoundedContextId.PLATFORM_CONTEXT, actorSystem);
+            new ActorSystemBusinessFunctionRegistry(actorSystem);
         I interactor = caseConfigurer.configure(businessFunctionRegistry);
         Promise<Object> result = caseRunner.run(interactor);
         resultChecker.check(result);

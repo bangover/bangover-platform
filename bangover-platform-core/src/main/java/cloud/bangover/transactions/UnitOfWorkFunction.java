@@ -1,6 +1,5 @@
 package cloud.bangover.transactions;
 
-import cloud.bangover.BoundedContextId;
 import cloud.bangover.functions.BusinessFunction;
 import cloud.bangover.functions.BusinessFunctionDecorator;
 import lombok.AccessLevel;
@@ -32,11 +31,6 @@ public class UnitOfWorkFunction<Q, S> implements BusinessFunction<Q, S> {
 
   private void invokeFunction(Context<Q, S> functionContext, UnitOfWorkContext unitOfWorkContext) {
     original.invoke(new Context<Q, S>() {
-      @Override
-      public BoundedContextId getBoundedContextId() {
-        return functionContext.getBoundedContextId();
-      }
-
       @Override
       public Q getRequest() {
         return functionContext.getRequest();

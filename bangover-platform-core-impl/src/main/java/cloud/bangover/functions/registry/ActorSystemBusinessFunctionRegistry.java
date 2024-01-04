@@ -1,6 +1,5 @@
 package cloud.bangover.functions.registry;
 
-import cloud.bangover.BoundedContextId;
 import cloud.bangover.actors.Actor;
 import cloud.bangover.actors.ActorAddress;
 import cloud.bangover.actors.ActorName;
@@ -21,27 +20,22 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ActorSystemBusinessFunctionRegistry implements BusinessFunctionRegistry {
-  private final BoundedContextId boundedContextId;
   private final ActorSystem actorSystem;
 
   private final Generator<ActorName> actorNameGenerator =
       () -> ActorName.wrap(String.format("FUNCTION--%s", UUID.randomUUID()));
 
   @Override
-  public <S> FunctionReplyOnlyInteractor<S> registerReplyOnlyFunction(Class<?> responseType,
+  public <S> ReplyOnlyInteractor<S> registerReplyOnlyFunction(Class<?> responseType,
       BusinessFunction<Void, S> businessFunction, Timeout timeout) {
-    ReplyOnlyInteractor<S> interactor =
-        new ReplyOnlyFunctionInteractor<S>(responseType, businessFunction, timeout);
-    return new FunctionReplyOnlyInteractorWrapper<>(boundedContextId, interactor);
+    return new ReplyOnlyFunctionInteractor<S>(responseType, businessFunction, timeout);
   }
 
   @Override
-  public <Q, S> FunctionRequestReplyInteractor<Q, S> registerRequestReplyFunction(
-      Class<?> requestType, Class<?> responseType, BusinessFunction<Q, S> businessFunction,
-      Timeout timeout) {
-    RequestReplyInteractor<Q, S> interactor = new RequestReplyFunctionInteractor<Q, S>(requestType,
-        responseType, businessFunction, timeout);
-    return new FunctionRequestReplyInteractorWrapper<>(boundedContextId, interactor);
+  public <Q, S> RequestReplyInteractor<Q, S> registerRequestReplyFunction(Class<?> requestType,
+      Class<?> responseType, BusinessFunction<Q, S> businessFunction, Timeout timeout) {
+    return new RequestReplyFunctionInteractor<Q, S>(requestType, responseType, businessFunction,
+        timeout);
   }
 
   private class RequestReplyFunctionInteractor<Q, S> implements RequestReplyInteractor<Q, S> {
@@ -52,8 +46,8 @@ public class ActorSystemBusinessFunctionRegistry implements BusinessFunctionRegi
         BusinessFunction<Q, S> businessFunction, Timeout timeout) {
       super();
       Actor.Factory<InvokeBusinessFunction<Object, Object>> actorFactory =
-          BusinessFunctionExecutionActor.factory(requestType, responseType, boundedContextId,
-              businessFunction, timeout);
+          BusinessFunctionExecutionActor.factory(requestType, responseType, businessFunction,
+              timeout);
       this.actorAddress = actorSystem.actorOf(actorNameGenerator.generateNext(), actorFactory);
     }
 

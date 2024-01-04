@@ -1,6 +1,5 @@
 package cloud.bangover.functions.registry;
 
-import cloud.bangover.BoundedContextId;
 import cloud.bangover.async.promises.Deferred;
 import cloud.bangover.errors.ApplicationException;
 import cloud.bangover.errors.UnexpectedErrorException;
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 public class BusinessFunctionExecutor {
   private final Class<?> requestType;
   private final Class<?> responseType;
-  private final BoundedContextId boundedContextId;
   private final BusinessFunction<Object, Object> function;
 
   public void executeFunction(Object request, Deferred<Object> deferred,
@@ -26,11 +24,6 @@ public class BusinessFunctionExecutor {
       checkRequestType(request);
       timeoutSupervisor.startSupervision();
       function.invoke(new BusinessFunction.Context<Object, Object>() {
-        @Override
-        public BoundedContextId getBoundedContextId() {
-          return boundedContextId;
-        }
-
         @Override
         public Object getRequest() {
           return request;

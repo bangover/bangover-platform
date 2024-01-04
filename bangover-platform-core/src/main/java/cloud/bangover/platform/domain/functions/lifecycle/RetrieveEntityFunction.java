@@ -1,7 +1,6 @@
 package cloud.bangover.platform.domain.functions.lifecycle;
 
 import java.util.Optional;
-import cloud.bangover.BoundedContextId;
 import cloud.bangover.functions.BusinessFunction;
 import cloud.bangover.platform.domain.Entity;
 import cloud.bangover.platform.domain.functions.EntityNotFoundException;
@@ -22,10 +21,6 @@ public class RetrieveEntityFunction<I, E extends Entity<I>>
   public BusinessFunction<I, E> failOnEmptyResult() {
     return context -> {
       invoke(new Context<I, Optional<E>>() {
-        @Override
-        public BoundedContextId getBoundedContextId() {
-          return context.getBoundedContextId();
-        }
 
         @Override
         public I getRequest() {
@@ -37,7 +32,7 @@ public class RetrieveEntityFunction<I, E extends Entity<I>>
           if (response.isPresent()) {
             context.reply(response.get());
           } else {
-            reject(new EntityNotFoundException(getBoundedContextId()));
+            reject(new EntityNotFoundException());
           }
         }
 

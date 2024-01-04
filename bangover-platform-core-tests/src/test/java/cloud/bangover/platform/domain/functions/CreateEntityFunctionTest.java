@@ -1,6 +1,5 @@
 package cloud.bangover.platform.domain.functions;
 
-import cloud.bangover.BoundedContextId;
 import cloud.bangover.async.promises.Promise;
 import cloud.bangover.errors.ErrorDescriptor;
 import cloud.bangover.errors.UnexpectedErrorException;
@@ -96,7 +95,6 @@ public class CreateEntityFunctionTest {
     });
     Assert.assertEquals(ErrorDescriptor.ErrorCode.UNRECOGNIZED_ERROR_CODE, error.getErrorCode());
     Assert.assertEquals(ErrorDescriptor.ErrorSeverity.INCIDENT, error.getErrorSeverity());
-    Assert.assertEquals(BoundedContextId.PLATFORM_CONTEXT, error.getContextId());
     Assert.assertEquals(0, store.getDataSet().toList().size());
   }
 }

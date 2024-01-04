@@ -1,6 +1,5 @@
 package cloud.bangover.validation;
 
-import cloud.bangover.BoundedContextId;
 import cloud.bangover.errors.ApplicationException;
 import cloud.bangover.errors.ErrorDescriptor.ErrorCode;
 import cloud.bangover.errors.ErrorDescriptor.ErrorSeverity;
@@ -24,8 +23,8 @@ public class ErrorDescriptionGeneratorTest {
     transformer.configure().withDefault(TextTemplates.createBy(PROCESSED_MESSAGE));
     // When
     TextProcessor textProcessor = TextProcessor.create().withTransformer(transformer);
-    ApplicationException error = new ApplicationException(BoundedContextId.createFor("CTX"),
-        ErrorSeverity.BUSINESS, ErrorCode.createFor(1L), DEFAULT_MESSAGE);
+    ApplicationException error =
+        new ApplicationException(ErrorSeverity.BUSINESS, ErrorCode.createFor(1L), DEFAULT_MESSAGE);
 
     // Then
     Assert.assertEquals(PROCESSED_MESSAGE,
@@ -36,8 +35,8 @@ public class ErrorDescriptionGeneratorTest {
   public void shouldGenerateDefaultDescription() {
     // When
     TextProcessor textProcessor = TextProcessor.create();
-    ApplicationException error = new ApplicationException(BoundedContextId.createFor("CTX"),
-        ErrorSeverity.BUSINESS, ErrorCode.createFor(1L), DEFAULT_MESSAGE);
+    ApplicationException error =
+        new ApplicationException(ErrorSeverity.BUSINESS, ErrorCode.createFor(1L), DEFAULT_MESSAGE);
 
     // Then
     Assert.assertEquals(error.getMessage(),

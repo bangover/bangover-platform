@@ -1,6 +1,5 @@
 package cloud.bangover.events;
 
-import cloud.bangover.BoundedContextId;
 import cloud.bangover.interactions.pubsub.PubSub;
 import cloud.bangover.interactions.pubsub.Subscriber;
 import cloud.bangover.interactions.pubsub.Subscribtion;
@@ -30,14 +29,13 @@ public class PubSubEventBus implements EventBus {
   }
 
   @Override
-  public <E> EventPublisher<E> getPublisher(BoundedContextId contextId, EventType<E> eventType) {
-    return new PubSubBroadcastPublisher<E>(contextId, eventType);
+  public <E> EventPublisher<E> getPublisher(EventType<E> eventType) {
+    return new PubSubBroadcastPublisher<E>(eventType);
   }
 
   @Override
-  public <E> EventSubscribtion subscribeOn(BoundedContextId contextId, EventType<E> eventType,
-      EventListener<E> eventListener) {
-    Topic topic = createTopic(contextId, eventType);
+  public <E> EventSubscribtion subscribeOn(EventType<E> eventType, EventListener<E> eventListener) {
+    Topic topic = createTopic(eventType);
     Subscriber<E> eventSubscriber = new PubSubEventSubscriber<>(eventType, eventListener);
     return subscribeOn(topic, eventType.getEventClass(), eventSubscriber);
   }
@@ -54,8 +52,8 @@ public class PubSubEventBus implements EventBus {
     return new PubSubEventBusSubscribtion(subscribtion);
   }
 
-  private <E> Topic createTopic(BoundedContextId contextId, EventType<E> eventType) {
-    return Topic.ofName(String.format("%s__%s", contextId, eventType.extract()));
+  private <E> Topic createTopic(EventType<E> eventType) {
+    return Topic.ofName(String.format("EVENTS.TOPIC__%s", eventType.extract()));
   }
 
   private final <E> void checkThatTheEventIsAcceptable(EventType<E> eventType, Object event) {
@@ -66,21 +64,19 @@ public class PubSubEventBus implements EventBus {
 
   @Value
   private class BroadcastEvent {
-    private final BoundedContextId contextId;
     private final EventType<Object> eventType;
     private final Object event;
   }
 
   @RequiredArgsConstructor
   private class PubSubBroadcastPublisher<E> implements EventPublisher<E> {
-    private final BoundedContextId contextId;
     private final EventType<E> eventType;
 
     @Override
     @SuppressWarnings("unchecked")
     public void publish(E event) {
       pubSubChannel.getPublisher(BROADCAST_TOPIC_NAME)
-          .publish(new BroadcastEvent(contextId, (EventType<Object>) eventType, event));
+          .publish(new BroadcastEvent((EventType<Object>) eventType, event));
     }
   }
 
@@ -90,8 +86,8 @@ public class PubSubEventBus implements EventBus {
 
     @Override
     public void onMessage(BroadcastEvent message) {
-      globalEventListener.onEvent(new EventDescriptor<>(message.getContextId(),
-          message.getEventType(), message.getEvent()));
+      globalEventListener
+          .onEvent(new EventDescriptor<>(message.getEventType(), message.getEvent()));
     }
   }
 
@@ -99,25 +95,11 @@ public class PubSubEventBus implements EventBus {
     @Override
     public void onEvent(EventDescriptor<Object> eventDescriptor) {
       checkThatTheEventIsAcceptable(eventDescriptor.getEventType(), eventDescriptor.getEvent());
-      pubSubChannel
-          .getPublisher(
-              createTopic(eventDescriptor.getBoundedContext(), eventDescriptor.getEventType()))
+      pubSubChannel.getPublisher(createTopic(eventDescriptor.getEventType()))
           .publish(eventDescriptor.getEvent());
     }
   }
-
-//  @RequiredArgsConstructor
-//  private class PubSubEventBusPublisher<E> implements EventPublisher<E> {
-//    private final BoundedContextId contextId;
-//    private final EventType<E> eventType;
-//
-//    @Override
-//    public void publish(E event) {
-//      checkThatTheEventIsAcceptable(eventType, event);
-//      pubSubChannel.getPublisher(createTopic(contextId, eventType)).publish(event);
-//    }
-//  }
-
+  
   /**
    * This exception is happened if the event instance is not accepted to the event type.
    *

@@ -1,6 +1,5 @@
 package cloud.bangover.functions.registry;
 
-import cloud.bangover.BoundedContextId;
 import cloud.bangover.actors.Actor;
 import cloud.bangover.actors.Message;
 import cloud.bangover.async.Async;
@@ -21,20 +20,18 @@ public class BusinessFunctionExecutionActor extends Actor<InvokeBusinessFunction
   private final Timeout timeout;
 
   private BusinessFunctionExecutionActor(@NonNull Context context, @NonNull Class<?> requestType,
-      @NonNull Class<?> responseType, @NonNull BoundedContextId boundedContextId,
-      @NonNull BusinessFunction<Object, Object> function, Timeout timeout) {
+      @NonNull Class<?> responseType, @NonNull BusinessFunction<Object, Object> function,
+      Timeout timeout) {
     super(context);
-    this.functionExecutor =
-        new BusinessFunctionExecutor(requestType, responseType, boundedContextId, function);
+    this.functionExecutor = new BusinessFunctionExecutor(requestType, responseType, function);
     this.timeout = timeout;
   }
 
   @SuppressWarnings("unchecked")
   public static <Q, S> Factory<InvokeBusinessFunction<Object, Object>> factory(Class<?> requestType,
-      Class<?> responseType, BoundedContextId boundedContextId,
-      BusinessFunction<Q, S> businessFunction, Timeout timeout) {
+      Class<?> responseType, BusinessFunction<Q, S> businessFunction, Timeout timeout) {
     return context -> new BusinessFunctionExecutionActor(context, requestType, responseType,
-        boundedContextId, (BusinessFunction<Object, Object>) businessFunction, timeout);
+        (BusinessFunction<Object, Object>) businessFunction, timeout);
   }
 
   @Override
