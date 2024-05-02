@@ -1,7 +1,7 @@
 package cloud.bangover.async;
 
 import cloud.bangover.async.AsyncContext.LifecycleController;
-import cloud.bangover.events.GlobalEvents;
+import cloud.bangover.events.SystemEvents;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Optional;
@@ -17,10 +17,8 @@ public class AsyncFlowContext implements Context {
 
   public AsyncFlowContext() {
     super();
-    GlobalEvents.subscribeOn(AsyncContextEvent.ASYNC_CONTEXT_CREATED,
-        this::initializeContext);
-    GlobalEvents.subscribeOn(AsyncContextEvent.ASYNC_CONTEXT_DESTROYED,
-        this::destroyContext);
+    SystemEvents.subscribeOn(AsyncContextEvent.ASYNC_CONTEXT_CREATED, this::initializeContext);
+    SystemEvents.subscribeOn(AsyncContextEvent.ASYNC_CONTEXT_DESTROYED, this::destroyContext);
   }
 
   @Override
@@ -62,7 +60,7 @@ public class AsyncFlowContext implements Context {
   private Optional<Map<Contextual<Object>, BeanInstance>> removeContextualInsances(String key) {
     return Optional.of(getBeansCacheOrRegisterNew()).map(cache -> cache.remove(key));
   }
-  
+
   private BeanInstance getOrCreateBeanInsance(Contextual<Object> contextual,
       CreationalContext<Object> creationalContext) {
     return getContextualBeanInstances(contextual).computeIfAbsent(contextual,

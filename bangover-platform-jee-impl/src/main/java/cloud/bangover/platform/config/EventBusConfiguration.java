@@ -21,9 +21,10 @@ public class EventBusConfiguration {
 
   @Produces
   @ApplicationScoped
-  public EventBus.Factory eventsBusFactory() {
+  public EventBus defaultEventBus() {
     PubSub<Object> channel =
         ActorSystemPubSub.factory(actorSystem).createPubSub(EVENTS_CHANNEL_ACTOR_NAME);
-    return PubSubEventBus.factory(channel);
+    EventBus.Factory eventBusFactory = PubSubEventBus.factory(channel);
+    return eventBusFactory.createEventBus();
   }
 }

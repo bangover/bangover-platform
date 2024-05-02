@@ -16,8 +16,8 @@ public class GlobalEventsConfig {
   @Getter
   private final List<EventSubscribtion> subscriptions = new ArrayList<>();
 
-  public <E> GlobalEventsConfig withSubscription(
-      EventType<E> eventType, EventListener<E> eventListener) {
+  public <E> GlobalEventsConfig withSubscription(EventType<E> eventType,
+      EventListener<E> eventListener) {
     subscriptions.add(GlobalEvents.subscribeOn(eventType, eventListener));
     return this;
   }

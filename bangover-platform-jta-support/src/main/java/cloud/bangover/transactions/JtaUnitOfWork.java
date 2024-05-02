@@ -1,6 +1,9 @@
 package cloud.bangover.transactions;
 
 import cloud.bangover.errors.UnexpectedErrorException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import javax.transaction.NotSupportedException;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
@@ -11,13 +14,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 @RequiredArgsConstructor
-public class JtaUnitOfWork implements UnitOfWork {
+public class JtaUnitOfWork implements UnitOfWork, UnitOfWorkExtensionSupport {
   private final UserTransaction userTransaction;
+  private final List<UnitOfWorkExtension> extensions = new ArrayList<>();
+
+  @Override
+  public void addExtension(UnitOfWorkExtension extension) {
+    this.extensions.add(extension);
+  }
 
   @Override
   public UnitOfWorkContext startWork() {
     try {
-      return new JeeUnitOfWorkContext(userTransaction, startTransaction());
+      UnitOfWorkContext context = new JeeUnitOfWorkContext(userTransaction, startTransaction());
+      notifyStarted();
+      return context;
     } catch (NotSupportedException | SystemException error) {
       throw new UnexpectedErrorException(error);
     }
@@ -35,8 +46,24 @@ public class JtaUnitOfWork implements UnitOfWork {
     return userTransaction.getStatus() == Status.STATUS_NO_TRANSACTION;
   }
 
+  private void notifyStarted() {
+    notifyExtensions(UnitOfWorkExtension::onStarted);
+  }
+
+  private void notifyCompleted() {
+    notifyExtensions(UnitOfWorkExtension::onCompleted);
+  }
+
+  private void notifyAborted() {
+    notifyExtensions(UnitOfWorkExtension::onAborted);
+  }
+
+  private void notifyExtensions(Consumer<UnitOfWorkExtension> handler) {
+    this.extensions.forEach(handler);
+  }
+
   @RequiredArgsConstructor
-  private static class JeeUnitOfWorkContext implements UnitOfWorkContext {
+  private class JeeUnitOfWorkContext implements UnitOfWorkContext {
     private final UserTransaction transaction;
     @Getter(value = AccessLevel.PRIVATE)
     private final boolean started;
@@ -46,6 +73,7 @@ public class JtaUnitOfWork implements UnitOfWork {
     public void completeWork() {
       if (isStarted()) {
         transaction.commit();
+        notifyCompleted();
       }
     }
 
@@ -54,6 +82,7 @@ public class JtaUnitOfWork implements UnitOfWork {
     public void abortWork() {
       if (isStarted()) {
         transaction.rollback();
+        notifyAborted();
       }
     }
   }
