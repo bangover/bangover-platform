@@ -27,13 +27,15 @@ public class JpaEntityStore<I, E extends Entity<I>> implements EntityStore<I, E>
 
   @Override
   public Optional<E> find(I id) {
-    return find(id, LockModeType.NONE);
+    return Optional.ofNullable(entityManager.find(entityType, id));
   }
 
   @Override
   public void save(E entity) {
     unitOfWork.executeWorkUnit(() -> {
-      if (find(entity.getId(), lockMode).isPresent()) {
+      Optional<E> foundEntity = find(entity.getId());
+      if (foundEntity.isPresent()) {
+        entityManager.lock(foundEntity.get(), lockMode);
         entityManager.merge(entity);
       } else {
         entityManager.persist(entity);
@@ -44,11 +46,10 @@ public class JpaEntityStore<I, E extends Entity<I>> implements EntityStore<I, E>
   @Override
   public void delete(I id) {
     unitOfWork.executeWorkUnit(() -> {
-      find(id, lockMode).ifPresent(entityManager::remove);
+      find(id).ifPresent(entity -> {
+        entityManager.lock(entity, lockMode);
+        entityManager.remove(entity);
+      });
     });
-  }
-
-  private Optional<E> find(I id, LockModeType lockType) {
-    return Optional.ofNullable(entityManager.find(entityType, id, lockType));
   }
 }

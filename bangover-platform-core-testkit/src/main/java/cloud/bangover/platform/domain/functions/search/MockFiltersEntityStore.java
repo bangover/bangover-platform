@@ -1,6 +1,5 @@
 package cloud.bangover.platform.domain.functions.search;
 
-import cloud.bangover.CollectionWrapper;
 import cloud.bangover.platform.domain.functions.search.filters.FiltersEntity;
 import cloud.bangover.platform.domain.functions.search.filters.FiltersEntityStore;
 import cloud.bangover.platform.domain.functions.search.filters.Filters;
@@ -13,7 +12,7 @@ public class MockFiltersEntityStore<F extends Filters, E extends FiltersEntity<F
 
   @Override
   public Optional<E> findFiltersByToken(String token) {
-    return CollectionWrapper.of(getState())
-        .find(entity -> entity.getFilters().tokenize().equals(token));
+    return getState().stream().filter(entity -> entity.getFilters().tokenize().equals(token))
+        .findFirst();
   }
 }

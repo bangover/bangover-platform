@@ -4,14 +4,17 @@ import cloud.bangover.errors.UnexpectedErrorException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 
 @RequiredArgsConstructor
 public class JtaUnitOfWork implements UnitOfWork, UnitOfWorkExtensionSupport {
@@ -26,9 +29,7 @@ public class JtaUnitOfWork implements UnitOfWork, UnitOfWorkExtensionSupport {
   @Override
   public UnitOfWorkContext startWork() {
     try {
-      UnitOfWorkContext context = new JeeUnitOfWorkContext(userTransaction, startTransaction());
-      notifyStarted();
-      return context;
+      return new JeeUnitOfWorkContext(userTransaction, startTransaction());
     } catch (NotSupportedException | SystemException error) {
       throw new UnexpectedErrorException(error);
     }
@@ -37,6 +38,7 @@ public class JtaUnitOfWork implements UnitOfWork, UnitOfWorkExtensionSupport {
   private boolean startTransaction() throws NotSupportedException, SystemException {
     if (isNotStarted()) {
       userTransaction.begin();
+      notifyStarted();
       return true;
     }
     return false;
@@ -62,27 +64,45 @@ public class JtaUnitOfWork implements UnitOfWork, UnitOfWorkExtensionSupport {
     this.extensions.forEach(handler);
   }
 
-  @RequiredArgsConstructor
+  @AllArgsConstructor
   private class JeeUnitOfWorkContext implements UnitOfWorkContext {
     private final UserTransaction transaction;
     @Getter(value = AccessLevel.PRIVATE)
-    private final boolean started;
+    private boolean started;
 
     @Override
-    @SneakyThrows
     public void completeWork() {
       if (isStarted()) {
-        transaction.commit();
-        notifyCompleted();
+        commitTransaction();
       }
     }
 
     @Override
-    @SneakyThrows
     public void abortWork() {
       if (isStarted()) {
+        rollbackTransaction();
+      }
+    }
+
+    private void commitTransaction() {
+      try {
+        transaction.commit();
+        notifyCompleted();
+      } catch (SecurityException | IllegalStateException | RollbackException
+          | HeuristicMixedException | HeuristicRollbackException | SystemException error) {
+        this.started = false;
+        notifyAborted();
+        throw new UnexpectedErrorException(error);
+      }
+    }
+
+    private void rollbackTransaction() {
+      try {
+        this.started = false;
         transaction.rollback();
         notifyAborted();
+      } catch (IllegalStateException | SecurityException | SystemException error) {
+        throw new UnexpectedErrorException(error);
       }
     }
   }

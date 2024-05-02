@@ -21,6 +21,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<lombok.version>1.18.18</lombok.version>
 		<lombok.plugin.version>1.18.18.0</lombok.plugin.version>
+		<jta.version>1.2</jta.version>
 	</properties>
 
 	<dependencies>
@@ -31,8 +32,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
+			<groupId>javax.transaction</groupId>
+			<artifactId>javax.transaction-api</artifactId>
+			<version>${jta.version}</version>
 		</dependency>
 
 		<dependency>

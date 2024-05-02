@@ -8,7 +8,7 @@ public abstract class NonPaginatedAskTestCase<Ctx extends AskTestCase.AskContext
 
   @Override
   protected Collection<V> ask(Ctx context, AskSpecification<C, V> askAction) {
-    return askAction.ask(createSpecificationContext(context)).get();
+    return askAction.ask(createSpecificationContext(context));
   }
 
   protected abstract C createSpecificationContext(Ctx context);

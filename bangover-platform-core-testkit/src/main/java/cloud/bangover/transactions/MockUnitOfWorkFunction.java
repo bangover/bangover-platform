@@ -28,22 +28,4 @@ public class MockUnitOfWorkFunction<Q, S> implements BusinessFunction<Q, S> {
   public boolean isAborted() {
     return unitOfWork.isAborted();
   }
-
-  private static class MockUnitOfWork implements UnitOfWork {
-    private final MockUnitOfWorkContext context = new MockUnitOfWorkContext();
-
-    @Override
-    public UnitOfWorkContext startWork() {
-      context.reset();
-      return context;
-    }
-
-    public boolean isCompleted() {
-      return context.isCompleted();
-    }
-
-    public boolean isAborted() {
-      return context.isAborted();
-    }
-  }
 }

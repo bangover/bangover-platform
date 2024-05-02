@@ -1,12 +1,12 @@
 package cloud.bangover.platform.domain.functions.search.query;
 
-import cloud.bangover.CollectionWrapper;
 import cloud.bangover.functions.BusinessFunction;
 import cloud.bangover.platform.domain.store.AskSpecification;
 import cloud.bangover.platform.domain.store.AskSpecification.AskParameterizedSpecFactory;
+import java.util.Collection;
 
 public class PaginatedQueryExecutionFunction<C, Q extends PaginatedQuery, V>
-    implements BusinessFunction<Q, CollectionWrapper<V>> {
+    implements BusinessFunction<Q, Collection<V>> {
   private final C context;
   private final AskParameterizedSpecFactory<C, Q, V> specificationFactory;
 
@@ -18,7 +18,7 @@ public class PaginatedQueryExecutionFunction<C, Q extends PaginatedQuery, V>
   }
 
   @Override
-  public void invoke(Context<Q, CollectionWrapper<V>> context) {
+  public void invoke(Context<Q, Collection<V>> context) {
     Q query = context.getRequest();
     Pagination pagination = query.getPagination();
     AskSpecification<C, V> specification = specificationFactory.createSpecification(query);

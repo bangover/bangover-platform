@@ -1,10 +1,11 @@
 package cloud.bangover.platform.domain.store;
 
-import cloud.bangover.CollectionWrapper;
 import cloud.bangover.platform.domain.functions.search.query.Pagination;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 public interface AskSpecification<C, V> {
-  default CollectionWrapper<V> ask(C context) {
+  default Collection<V> ask(C context) {
     return ask(context, getPagination());
   }
 
@@ -12,13 +13,14 @@ public interface AskSpecification<C, V> {
     return new Pagination();
   }
 
-  CollectionWrapper<V> ask(C context, Pagination pagination);
+  Collection<V> ask(C context, Pagination pagination);
 
-  default <D> AskSpecification<C, D> deriveWithCollectionConvertation(AskedViewCollectionMapper<V, D> viewCollectionMapper) {
+  default <D> AskSpecification<C, D> deriveWithCollectionConvertation(
+      AskedViewCollectionMapper<V, D> viewCollectionMapper) {
     AskSpecification<C, V> spec = this;
     return new AskSpecification<C, D>() {
       @Override
-      public CollectionWrapper<D> ask(C context, Pagination pagination) {
+      public Collection<D> ask(C context, Pagination pagination) {
         return viewCollectionMapper.convert(spec.ask(context, pagination));
       }
     };
@@ -28,8 +30,9 @@ public interface AskSpecification<C, V> {
     AskSpecification<C, V> spec = this;
     return new AskSpecification<C, D>() {
       @Override
-      public CollectionWrapper<D> ask(C context, Pagination pagination) {
-        return spec.ask(context, pagination).map(viewMapper::convert);
+      public Collection<D> ask(C context, Pagination pagination) {
+        return spec.ask(context, pagination).stream().map(viewMapper::convert)
+            .collect(Collectors.toList());
       }
     };
   }
@@ -47,6 +50,6 @@ public interface AskSpecification<C, V> {
   }
 
   interface AskedViewCollectionMapper<V, D> {
-    CollectionWrapper<D> convert(CollectionWrapper<V> views);
+    Collection<D> convert(Collection<V> views);
   }
 }

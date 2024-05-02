@@ -1,18 +1,18 @@
 package cloud.bangover.platform.domain.store;
 
-import cloud.bangover.CollectionWrapper;
 import cloud.bangover.platform.domain.functions.search.query.Pagination;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MockAskContext<V> extends MockDataContainer<V> {
   @NonNull
-  private final Supplier<CollectionWrapper<V>> dataSupplier;
+  private final Supplier<Collection<V>> dataSupplier;
   @NonNull
   private Pagination pagination = new Pagination();
   @NonNull
@@ -21,7 +21,7 @@ public class MockAskContext<V> extends MockDataContainer<V> {
 
   public MockAskContext() {
     super();
-    this.dataSupplier = () -> CollectionWrapper.of(getDataSet().toList());
+    this.dataSupplier = () -> getDataSet().toList();
   }
 
   public void applyQuery(Predicate<V> predicate) {
@@ -37,8 +37,8 @@ public class MockAskContext<V> extends MockDataContainer<V> {
   }
 
   public Collection<V> getData() {
-    return dataSupplier.get().filter(predicate).sort(sorter).skip(pagination.getOffset())
-        .limit(pagination.getSize().longValue()).get();
+    return dataSupplier.get().stream().filter(predicate).sorted(sorter).skip(pagination.getOffset())
+        .limit(pagination.getSize().longValue()).collect(Collectors.toList());
   }
 
 }

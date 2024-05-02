@@ -1,6 +1,5 @@
 package cloud.bangover.platform.domain.functions.search.query;
 
-import cloud.bangover.CollectionWrapper;
 import cloud.bangover.dataset.DataSet;
 import cloud.bangover.functions.BusinessFunction;
 import cloud.bangover.functions.BusinessFunctionRegistry;
@@ -11,6 +10,8 @@ import cloud.bangover.platform.domain.functions.search.query.data.MockSearchData
 import cloud.bangover.platform.domain.functions.search.query.data.SearchData;
 import cloud.bangover.platform.domain.functions.search.query.spec.MockSearchDataSpec;
 import cloud.bangover.platform.domain.functions.search.query.spec.SearchQuery;
+import java.util.Arrays;
+import java.util.Collection;
 import lombok.SneakyThrows;
 import org.junit.After;
 import org.junit.Assert;
@@ -18,9 +19,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 @RunWith(JUnit4.class)
 public class QueryExecutionFunctionTest {
@@ -44,12 +42,12 @@ public class QueryExecutionFunctionTest {
   @SneakyThrows
   public void shouldFilterElementsByDiscriminatorIndependentlyOfRequestIfSpecFactoryIsNotParameterized() {
     // Given
-    BusinessFunction<Void, CollectionWrapper<SearchData>> businessFunction =
+    BusinessFunction<Void, Collection<SearchData>> businessFunction =
         new QueryExecutionFunction<>(dataStore, () -> new MockSearchDataSpec(SEARCH_DISCRIMINATOR));
-    ReplyOnlyInteractor<CollectionWrapper<SearchData>> interactor =
-        registry.registerReplyOnlyFunction(CollectionWrapper.class, businessFunction);
+    ReplyOnlyInteractor<Collection<SearchData>> interactor =
+        registry.registerReplyOnlyFunction(Collection.class, businessFunction);
     // When
-    CollectionWrapper<SearchData> foundData = interactor.invoke().get(100L);
+    Collection<SearchData> foundData = interactor.invoke().get(100L);
     // Then
     Assert.assertTrue(foundData.containsAll(expectedSearchResult()));
   }
@@ -59,13 +57,13 @@ public class QueryExecutionFunctionTest {
   public void shouldFilterElementsByDiscriminatorDependentOfRequestIfSpecFactoryIsParameterized() {
     // Given
     SearchQuery searchQuery = new SearchQuery(SEARCH_DISCRIMINATOR);
-    BusinessFunction<SearchQuery, CollectionWrapper<SearchData>> businessFunction =
+    BusinessFunction<SearchQuery, Collection<SearchData>> businessFunction =
         new QueryExecutionFunction<>(dataStore,
             query -> new MockSearchDataSpec(query.getDiscriminator()));
-    RequestReplyInteractor<SearchQuery, CollectionWrapper<SearchData>> interactor = registry
-        .registerRequestReplyFunction(SearchQuery.class, CollectionWrapper.class, businessFunction);
+    RequestReplyInteractor<SearchQuery, Collection<SearchData>> interactor = registry
+        .registerRequestReplyFunction(SearchQuery.class, Collection.class, businessFunction);
     // When
-    CollectionWrapper<SearchData> foundData = interactor.invoke(searchQuery).get(100L);
+    Collection<SearchData> foundData = interactor.invoke(searchQuery).get(100L);
     // Then
     Assert.assertTrue(foundData.containsAll(expectedSearchResult()));
   }

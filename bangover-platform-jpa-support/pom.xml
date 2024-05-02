@@ -21,6 +21,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<lombok.version>1.18.18</lombok.version>
 		<lombok.plugin.version>1.18.18.0</lombok.plugin.version>
+		<jpa.version>2.1.0</jpa.version>
 	</properties>
 
 	<dependencies>
@@ -31,8 +32,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>javax.persistence</artifactId>
+			<version>${jpa.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

@@ -1,6 +1,5 @@
 package cloud.bangover.locale;
 
-import cloud.bangover.CollectionWrapper;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Optional;
@@ -13,6 +12,6 @@ public class HttpRequestLocaleExtractor implements PlatformLocaleProvider.Locale
 
   @Override
   public Optional<Locale> extractLocale() {
-    return CollectionWrapper.of(Collections.list(httpServletRequest.getLocales())).firstElement();
+    return Collections.list(httpServletRequest.getLocales()).stream().findFirst();
   }
 }

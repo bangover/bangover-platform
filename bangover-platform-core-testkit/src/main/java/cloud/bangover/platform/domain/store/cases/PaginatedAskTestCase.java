@@ -8,7 +8,7 @@ public abstract class PaginatedAskTestCase<Ctx extends AskTestCase.AskContext<C,
     extends AskTestCase<Ctx, C, D, V> {
   @Override
   protected final Collection<V> ask(Ctx context, AskSpecification<C, V> askAction) {
-    return askAction.ask(createSpecificationContext(context), getPagination(context)).get();
+    return askAction.ask(createSpecificationContext(context), getPagination(context));
   }
 
   protected abstract C createSpecificationContext(Ctx context);

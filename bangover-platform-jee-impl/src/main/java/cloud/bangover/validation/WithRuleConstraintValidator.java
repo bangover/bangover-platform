@@ -1,13 +1,12 @@
 package cloud.bangover.validation;
 
-import cloud.bangover.CollectionWrapper;
 import cloud.bangover.text.Text;
 import cloud.bangover.text.TextTemplates;
 import cloud.bangover.validation.global.GlobalValidations;
-
+import java.util.Collection;
+import java.util.stream.Collectors;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Collection;
 
 public class WithRuleConstraintValidator implements ConstraintValidator<WithRule, Object> {
   private String ruleAlias;
@@ -28,8 +27,8 @@ public class WithRuleConstraintValidator implements ConstraintValidator<WithRule
 
   private boolean validateAcceptableValue(Object value, ConstraintValidatorContext context,
       Rule<Object> rule) {
-    CollectionWrapper<String> errors = interpolateErrorMessages(rule.check(value));
-    if (errors.count() > 0) {
+    Collection<String> errors = interpolateErrorMessages(rule.check(value));
+    if (errors.size() > 0) {
       appendInterpolatedViolationMessages(context, errors);
       return false;
     }
@@ -37,15 +36,15 @@ public class WithRuleConstraintValidator implements ConstraintValidator<WithRule
   }
 
   private void appendInterpolatedViolationMessages(ConstraintValidatorContext context,
-      CollectionWrapper<String> errors) {
+      Collection<String> errors) {
     context.disableDefaultConstraintViolation();
     errors.forEach(
         error -> context.buildConstraintViolationWithTemplate(error).addConstraintViolation());
   }
 
-  CollectionWrapper<String> interpolateErrorMessages(Collection<ErrorMessage> errorMessages) {
-    return CollectionWrapper.of(errorMessages)
+  private Collection<String> interpolateErrorMessages(Collection<ErrorMessage> errorMessages) {
+    return errorMessages.stream()
         .map(message -> TextTemplates.createBy(message.getMessage(), message.getParameters()))
-        .map(Text::interpolate);
+        .map(Text::interpolate).collect(Collectors.toList());
   }
 }

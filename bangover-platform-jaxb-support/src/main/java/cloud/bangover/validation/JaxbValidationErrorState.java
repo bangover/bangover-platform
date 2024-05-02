@@ -1,6 +1,5 @@
 package cloud.bangover.validation;
 
-import cloud.bangover.CollectionWrapper;
 import cloud.bangover.text.Text;
 import cloud.bangover.text.TextTemplates;
 import cloud.bangover.validation.ValidationState.ErrorState;
@@ -8,6 +7,7 @@ import cloud.bangover.validation.ValidationState.GroupedError;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -50,7 +50,8 @@ public class JaxbValidationErrorState implements ErrorState {
 
   @Override
   public Collection<GroupedError> getGroupedErrors() {
-    return CollectionWrapper.of(groupedErrors).cast(GroupedError.class).normalize(ArrayList::new);
+    return groupedErrors.stream().map(GroupedError.class::cast)
+        .collect(Collectors.toCollection(ArrayList::new));
   }
 
   @ToString
@@ -86,8 +87,9 @@ public class JaxbValidationErrorState implements ErrorState {
     private final Collection<String> errorMessages;
 
     public List<ErrorMessage> build() {
-      return CollectionWrapper.of(errorMessages).map(ErrorMessage::createFor)
-          .normalize(ArrayList::new);
+      return errorMessages.stream().map(ErrorMessage::createFor)
+          .collect(Collectors.toCollection(ArrayList::new));
+
     }
   }
 
@@ -96,8 +98,9 @@ public class JaxbValidationErrorState implements ErrorState {
     private final Collection<ErrorMessage> errorMessages;
 
     public List<String> interpolate() {
-      return CollectionWrapper.of(errorMessages).map(ErrorMessageInterpolator::new)
-          .map(ErrorMessageInterpolator::interpolate).normalize(ArrayList::new);
+      return errorMessages.stream().map(ErrorMessageInterpolator::new)
+          .map(ErrorMessageInterpolator::interpolate)
+          .collect(Collectors.toCollection(ArrayList::new));
     }
   }
 

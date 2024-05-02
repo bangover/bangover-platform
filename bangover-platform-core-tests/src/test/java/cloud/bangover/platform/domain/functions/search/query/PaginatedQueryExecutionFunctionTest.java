@@ -1,16 +1,5 @@
 package cloud.bangover.platform.domain.functions.search.query;
 
-import java.util.Arrays;
-import java.util.Collection;
-
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
-import cloud.bangover.CollectionWrapper;
 import cloud.bangover.dataset.DataSet;
 import cloud.bangover.functions.BusinessFunction;
 import cloud.bangover.functions.BusinessFunctionRegistry;
@@ -20,7 +9,15 @@ import cloud.bangover.platform.domain.functions.search.query.data.MockSearchData
 import cloud.bangover.platform.domain.functions.search.query.data.SearchData;
 import cloud.bangover.platform.domain.functions.search.query.spec.MockSearchDataPaginatedSpec;
 import cloud.bangover.platform.domain.functions.search.query.spec.PaginatedSearchQuery;
+import java.util.Arrays;
+import java.util.Collection;
 import lombok.SneakyThrows;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class PaginatedQueryExecutionFunctionTest {
@@ -46,14 +43,14 @@ public class PaginatedQueryExecutionFunctionTest {
     // Given
     PaginatedSearchQuery searchQuery = new PaginatedSearchQuery(SEARCH_DISCRIMINATOR);
     BusinessFunction<PaginatedSearchQuery,
-        CollectionWrapper<SearchData>> businessFunction = new PaginatedQueryExecutionFunction<>(
+        Collection<SearchData>> businessFunction = new PaginatedQueryExecutionFunction<>(
             context, query -> new MockSearchDataPaginatedSpec(query.getDiscriminator(),
                 query.getPagination()));
-    RequestReplyInteractor<PaginatedSearchQuery, CollectionWrapper<SearchData>> interactor =
-        registry.registerRequestReplyFunction(PaginatedSearchQuery.class, CollectionWrapper.class,
+    RequestReplyInteractor<PaginatedSearchQuery, Collection<SearchData>> interactor =
+        registry.registerRequestReplyFunction(PaginatedSearchQuery.class, Collection.class,
             businessFunction);
     // When
-    CollectionWrapper<SearchData> foundData = interactor.invoke(searchQuery).get(100L);
+    Collection<SearchData> foundData = interactor.invoke(searchQuery).get(100L);
     // Then
     Assert.assertTrue(foundData.containsAll(expectedSearchResult()));
   }

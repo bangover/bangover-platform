@@ -1,21 +1,19 @@
 package cloud.bangover.platform.domain;
 
-import lombok.Getter;
+import cloud.bangover.events.GlobalEvents;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @NoArgsConstructor
 public abstract class AbstractEventDrivenEntity<I, E extends AbstractEventDrivenEntity<I, E>>
-    extends AbstractEntity<I> implements EventDrivenEntity<I, E> {
-  @Getter
-  private final EntityEventsManager<I, E> localEventsManager = new EntityEventsManager<>();
+    extends AbstractEntity<I> {
 
   public AbstractEventDrivenEntity(I id) {
     super(id);
   }
 
   protected final <V extends EntityEvent<I, E, V>> void publishDomainEvent(V event) {
-    localEventsManager.publishDomainEvent(event);
+    GlobalEvents.publisher(event.getEventType()).publish(event);
   }
 }
